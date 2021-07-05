@@ -99,4 +99,49 @@ const router = Router();
     }
   });
   
+
+/**
+ * @description To aiuthenticate an user and get auth token
+ * @api /users/api/authenticate
+ * @access PUBLIC
+ * @type POST
+ */
+ router.post(
+    "/api/authenticate",
+    AuthenticateValidations,
+    Validator,
+    async (req, res) => {
+      try {
+        let { username, password } = req.body;
+        let user = await User.findOne({ username });
+        if (!user) {
+          return res.status(404).json({
+            success: false,
+            message: "Username not found.",
+          });
+        }
+        if (!(await user.comparePassword(password))) {
+          return res.status(401).json({
+            success: false,
+            message: "Incorrect password.",
+          });
+        }
+        let token = await user.generateJWT();
+        return res.status(200).json({
+          success: true,
+          user: user.getUserInfo(),
+          token: `Bearer ${token}`,
+          message: "Hurray! You are now logged in.",
+        });
+      } catch (err) {
+        return res.status(500).json({
+          success: false,
+          message: "An error occurred.",
+        });
+      }
+    }
+  );
+
+
+
 export default router;
