@@ -6,7 +6,7 @@ import {validationResult} from 'express-validator'
 import { AuthenticateValidations, RegisterValidations } from "../validators";
 import Validator from "../middlewares/validator-middleware";
 import sendmail from "../functions/email-sender";
-
+import { join } from "path";
 
 
 const router = Router();
@@ -18,9 +18,7 @@ const router = Router();
  * @type POST
  */
  router.post("/api/register",RegisterValidations,Validator,async (req,res)=>{
-
    try{
-
     let { username, email } = req.body;
     // Check if the username is taken or not
     let user = await User.findOne({ username });
@@ -73,4 +71,32 @@ const router = Router();
  });
 
 
+/**
+ * @description To verify a new user's account via email
+ * @api /users/verify-now/:verificationCode
+ * @access PUBLIC <Only Via email>
+ * @type GET
+ */
+ router.get("/verify-now/:verificationCode", async (req, res) => {
+    try {
+      let { verificationCode } = req.params;
+      let user = await User.findOne({ verificationCode });
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized access. Invalid verification code.",
+        });
+      }
+      user.verified = true;
+      user.verificationCode = undefined;
+      await user.save();
+      return res.sendFile(
+        join(__dirname, "../templates/verification-success.html")
+      );
+    } catch (err) {
+      console.log("ERR", err.message);
+      return res.sendFile(join(__dirname, "../templates/errors.html"));
+    }
+  });
+  
 export default router;
