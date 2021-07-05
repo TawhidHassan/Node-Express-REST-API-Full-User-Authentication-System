@@ -10,8 +10,9 @@ import { join } from "path";
 import { DB } from "./constants";
 const PORT=5000;
 // Router imports
-import userApis from './apis/user'
-import profileApis from "./apis/profile";
+import userApis from "./apis/user";
+import postApis from "./apis/posts";
+import profileApis from "./apis/profiles";
 
 // Import passport middleware
 require("./middlewares/passport-middleware");
@@ -27,6 +28,7 @@ app.use(express.static(join(__dirname, "./uploads")));
 // Inject Sub router and apis
 app.use('/users',userApis);
 app.use("/profiles", profileApis);
+app.use("/posts", postApis);
 
 const main =  () => {
   try {
