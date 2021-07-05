@@ -4,13 +4,14 @@ import express from "express";
 import mongoose from "mongoose";
 import passport from "passport";
 import { json } from "body-parser";
-
+import { join } from "path";
 
 // Import Application Constants
 import { DB } from "./constants";
 const PORT=5000;
 // Router imports
 import userApis from './apis/user'
+import profileApis from "./apis/profile";
 
 // Import passport middleware
 require("./middlewares/passport-middleware");
@@ -22,8 +23,10 @@ const app = express();
 app.use(cors());
 app.use(json());
 app.use(passport.initialize());
+app.use(express.static(join(__dirname, "./uploads")));
 // Inject Sub router and apis
 app.use('/users',userApis);
+app.use("/profiles", profileApis);
 
 const main =  () => {
   try {

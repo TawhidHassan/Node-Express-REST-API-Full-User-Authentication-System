@@ -74,7 +74,7 @@ UserSchema.pre("save", async function (next) {
   
   //that make a custom object against main schema
   UserSchema.methods.getUserInfo = function () {
-    return pick(this, ["_id", "username", "email", "name"]);
+    return pick(this, ["_id", "username", "email", "name","password"]);
   };
   
   const User = model("users", UserSchema);
