@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"node -r esm",
-    "dev":"nodemon -r esm ."
+    "start": "node -r esm",
+    "dev": "nodemon -r esm ."
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "express-validator": "^6.12.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.1",
+    "nodemailer": "^6.6.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0"
   }
